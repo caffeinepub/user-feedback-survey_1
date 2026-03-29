@@ -1,0 +1,49 @@
+import type { Principal } from "@icp-sdk/core/principal";
+export interface Some<T> {
+    __kind__: "Some";
+    value: T;
+}
+export interface None {
+    __kind__: "None";
+}
+export type Option<T> = Some<T> | None;
+export interface FeedbackStats {
+    averageRating: number;
+    totalResponses: bigint;
+}
+export interface FeedbackResponse {
+    name: string;
+    feedback: string;
+    timestamp: Time;
+    category: string;
+    rating: bigint;
+}
+export type Time = bigint;
+export interface InviteCode {
+    created: Time;
+    code: string;
+    used: boolean;
+}
+export interface RSVP {
+    name: string;
+    inviteCode: string;
+    timestamp: Time;
+    attending: boolean;
+}
+export enum UserRole {
+    admin = "admin",
+    user = "user",
+    guest = "guest"
+}
+export interface backendInterface {
+    assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    generateInviteCode(): Promise<string>;
+    getAllRSVPs(): Promise<Array<RSVP>>;
+    getAllResponses(): Promise<Array<FeedbackResponse>>;
+    getCallerUserRole(): Promise<UserRole>;
+    getFeedbackStats(): Promise<FeedbackStats>;
+    getInviteCodes(): Promise<Array<InviteCode>>;
+    isCallerAdmin(): Promise<boolean>;
+    submitFeedback(name: string, rating: bigint, category: string, feedback: string): Promise<void>;
+    submitRSVP(name: string, attending: boolean, inviteCode: string): Promise<void>;
+}
